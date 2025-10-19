@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "name": "Algorithms"
+  },
+  {
+    "id": 2,
+    "name": "Artificial Intelligence"
+  },
+  {
+    "id": 3,
+    "name": "Back-end"
+  },
+  {
+    "id": 4,
+    "name": "Data Engineering"
+  },
+  {
+    "id": 5,
+    "name": "Data Structures"
+  },
+  {
+    "id": 6,
+    "name": "Database Systems"
+  },
+  {
+    "id": 7,
+    "name": "Database and SQL"
+  },
+  {
+    "id": 8,
+    "name": "DevOps"
+  },
+  {
+    "id": 9,
+    "name": "Distributed Systems"
+  },
+  {
+    "id": 10,
+    "name": "Front-end"
+  },
+  {
+    "id": 11,
+    "name": "Full-stack"
+  },
+  {
+    "id": 12,
+    "name": "General Program"
+  },
+  {
+    "id": 13,
+    "name": "General Programming"
+  },
+  {
+    "id": 14,
+    "name": "Languages and Frameworks"
+  },
+  {
+    "id": 15,
+    "name": "Low-level Systems"
+  },
+  {
+    "id": 16,
+    "name": "Machine Learning"
+  },
+  {
+    "id": 17,
+    "name": "Networking"
+  },
+  {
+    "id": 18,
+    "name": "Security"
+  },
+  {
+    "id": 19,
+    "name": "Software Testing"
+  },
+  {
+    "id": 20,
+    "name": "System Design"
+  },
+  {
+    "id": 21,
+    "name": "Version Control"
+  },
+  {
+    "id": 22,
+    "name": "Web Development"
+  }
+]

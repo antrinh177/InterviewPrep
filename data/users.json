@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Ema Maeda",
+    "email": "ema.maeda@example.com",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "name": "An Trinh",
+    "email": "an.trinh@example.com",
+    "role": "user"
+  },
+  {
+    "id": 3,
+    "name": "Tram Pham",
+    "email": "tram.pham@example.com",
+    "role": "user"
+  },
+  {
+    "id": 4,
+    "name": "Manuel Ortegon",
+    "email": "manuel.ortegon@example.com",
+    "role": "user"
+  },
+  {
+    "id": 5,
+    "name": "Khang Nguyen",
+    "email": "khang.nguyen@example.com",
+    "role": "user"
+  }
+]
