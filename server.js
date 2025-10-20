@@ -8,21 +8,25 @@ const port = 3000;
 app.get("/questions", async (req, res) => {
   try {
     const questions = await readQuestionsToFile();
-    const {category, difficulty} = req.query;
+    const { category, difficulty } = req.query;
 
     let filteredData = questions;
 
     //Get questions based on category: /questions/?category=Data Structure
     if (category) {
       const cat = category.trim().toLowerCase();
-      filteredData = filteredData.filter((q) => q.Category.toLowerCase().includes(cat));
+      filteredData = filteredData.filter((q) =>
+        q.Category.toLowerCase().includes(cat)
+      );
     }
 
     //Get questions based on difficulty: /questions/?difficulty=Hard
     //Get questions based on category & difficulty: /questions/?category=Data Structure&difficulty=Hard
     if (difficulty) {
       const diff = difficulty.trim().toLowerCase();
-      filteredData = filteredData.filter((q) => q.Difficulty.toLowerCase() === diff);
+      filteredData = filteredData.filter(
+        (q) => q.Difficulty.toLowerCase() === diff
+      );
     }
 
     if (filteredData.length === 0) {
@@ -30,7 +34,6 @@ app.get("/questions", async (req, res) => {
     }
 
     res.json(filteredData);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
