@@ -50,7 +50,7 @@ InterviewPrep
 ## Features
 
 - **CRUD Operations**: Create, Read, Update, and Delete operations for questions, users, and categories
-- **Modular Architecture**: Organized into feature-based modules for better maintainability
+- **Modular Architecture**: Organized into feature-based modules (categories, questions, and users) for better maintainability
 - **Data Validation**: Input validation using express-validator to ensure data integrity
 - **Error Handling**: Centralized error handling and 404 Not Found responses
 - **Logging**: Middleware for logging incoming requests for debugging purposes
@@ -60,8 +60,8 @@ InterviewPrep
 1. Clone the repository:
 
    ```
-   git clone <repository-url>
-   cd InterviewPrepApp
+   git clone https://github.com/antrinh177/InterviewPrep.git
+   cd InterviewPrep
    ```
 
 2. Install dependencies:
@@ -76,7 +76,7 @@ InterviewPrep
    npm start
    ```
 
-4. Access the API at `http://localhost:3000`.
+4. Access the API at `http://127.0.0.1:3000`.
 
 ## Usage Examples
 
@@ -106,4 +106,5 @@ We used Postman to test the API endpoints. Ensure all CRUD operations work as ex
 - data/users.json
 - modules/categories/\*
 - modules/users/\*
+- scripts/\* (to generate categories.json)
 - README.md
