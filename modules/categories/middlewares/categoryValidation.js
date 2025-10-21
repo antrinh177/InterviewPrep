@@ -1,7 +1,16 @@
 const { body, validationResult } = require("express-validator");
 
 const categoryValidation = [
-  body("id").optional().isInt().withMessage("ID must be an integer"),
+  body("id")
+    .optional()
+    .custom((value) => {
+      if (typeof value === "string") {
+        throw new Error("ID must be a number, not a string");
+      }
+      return true;
+    })
+    .isInt()
+    .withMessage("ID must be an integer"),
   body("name")
     .notEmpty()
     .withMessage("Name is required")
