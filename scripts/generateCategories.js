@@ -57,7 +57,7 @@ if (questionsArray.length === 0) {
 // Extract only category names and remove duplicates using a Set
 const uniqueCategoryNames = new Set(
   questionsArray
-    .map((q) => q.Category)
+    .map((q) => q.category)
     .filter((name) => name && name.trim() !== "") // Filter for category names that exist and are not empty strings
 );
 
