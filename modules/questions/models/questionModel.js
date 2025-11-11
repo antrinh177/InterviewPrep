@@ -26,6 +26,7 @@ const questionSchema = new mongoose.Schema({
 const Question = mongoose.model('Question', questionSchema);
 
 //Get all questions with Mongoose
+//Apply search, sort, pagination
 const getAllQuestions = async(query) => {
     const filter = {};
     if (query.category) {
@@ -37,7 +38,7 @@ const getAllQuestions = async(query) => {
     if (query.search) {
         filter.Question = { $regex: query.search, $options: 'i' };
     }
-
+ 
     const page = query.page || 1;
     const limit = query.limit || 10;
     const skip = (page - 1) * limit;
