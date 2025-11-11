@@ -81,6 +81,7 @@ InterviewPrep
 ## Usage Examples
 
 - **Get all questions**: `GET /questions`
+- **Get all questions with search, sort, pagination** : `GET /questions?search={keyword}&category={category}&difficulty={level}&sort={field}&page={number}&limit={items}`
 - **Get a question by ID**: `GET /questions/:id`
 - **Add a new question**: `POST /questions` with JSON body
 - **Update a question**: `PUT /questions/:id` with JSON body
