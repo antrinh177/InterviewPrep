@@ -9,9 +9,6 @@ We designed the data structure adding sample data and implementing a modular Exp
 ```
 InterviewPrep
 ├── data
-│   ├── questions.json
-│   ├── users.json
-│   └── categories.json
 ├── modules
 │   ├── questions
 │   │   ├── models
@@ -34,10 +31,13 @@ InterviewPrep
 │       │   └── categoryRoutes.js
 │       └── middlewares
 │           └── categoryValidation.js
-├── middlewares
-│   ├── errorHandler.js
-│   ├── notFound.js
-│   └── logger.js
+├── shared
+|   ├──middlewares
+|       ├── connect-db.js
+│       ├── errorHandler.js
+│       ├── notFound.js
+│       └── logger.js
+|         
 ├── scripts
 │   └── generateCategories.js
 ├── utils
@@ -92,19 +92,17 @@ We used Postman to test the API endpoints. Ensure all CRUD operations work as ex
 
 ## Task Distribution
 
+## Phase 3
 ### An Trinh
 
-- data/questions.json
-- middlewares/\*
-- modules/questions/\*
-- utils/\*
-- server.js
+- connect-db.js
+- questionModel.js
+- README.md
+- Testing
 
 ### Ema Maeda
 
-- data/categories.json
-- data/users.json
-- modules/categories/\*
-- modules/users/\*
-- scripts/\* (to generate categories.json)
+- categoryModel.js
+- userModel.js
 - README.md
+- Testing
