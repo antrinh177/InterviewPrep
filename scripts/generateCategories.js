@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 
 // Define paths relative to the script location
-const questionsFilePath = path.join(__dirname, "../data/questions.json");
-const categoriesFilePath = path.join(__dirname, "../data/categories.json");
+const questionsFilePath = path.join(__dirname, "../data/questions1.json");
+const categoriesFilePath = path.join(__dirname, "../data/cat1.json");
 
 // Read the JSON file
 let rawInputData;
@@ -57,7 +57,7 @@ if (questionsArray.length === 0) {
 // Extract only category names and remove duplicates using a Set
 const uniqueCategoryNames = new Set(
   questionsArray
-    .map((q) => q.category)
+    .map((q) => q.Category || q.category)
     .filter((name) => name && name.trim() !== "") // Filter for category names that exist and are not empty strings
 );
 

@@ -13,7 +13,7 @@ const router = express.Router();
 //GET all questions
 router.get("/", async(req, res) => {
     try {
-        const questions = await getAllQuestions();
+        const questions = await getAllQuestions(req.query);
         res.status(200).json(questions);
     } catch (e){
         res.status(500).json({error: e.message})
