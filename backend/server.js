@@ -12,7 +12,7 @@ const logger = require("./shared/middlewares/logger");
 
 const app = express();
 const hostname = process.env.HOSTNAME || "127.0.0.1";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // Connect to MongoDB
 connectDB();
