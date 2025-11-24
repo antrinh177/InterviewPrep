@@ -1,3 +1,54 @@
+## Project Structure
+
+InterviewPrep/
+├── backend/
+│ ├── modules/
+│ │ ├── categories/
+│ │ │ ├── middlewares/
+│ │ │ │ └── categoryValidation.js
+│ │ │ ├── models/
+│ │ │ │ └── categoryModel.js
+│ │ │ └── routes/
+│ │ │ └── categoryRoutes.js
+│ │ ├── questions/
+│ │ │ ├── middlewares/
+│ │ │ │ └── questionValidation.js
+│ │ │ ├── models/
+│ │ │ │ └── questionModel.js
+│ │ │ └── routes/
+│ │ │ └── questionRoutes.js
+│ │ └── users/
+│ │ └── ...
+│ ├── shared/
+│ │ └── middlewares/
+│ │ ├── connect-db.js
+│ │ ├── errorHandler.js
+│ │ ├── logger.js
+│ │ └── notFound.js
+│ ├── scripts/
+│ │ └── updateCategoriesWithMainCat.js
+│ ├── .env
+│ ├── server.js
+│ └── package.json
+│
+├── frontend/
+│ ├── public/
+│ ├── src/
+│ │ ├── pages/
+│ │ │ ├── forms/
+│ │ │ │ └── QuestionSearchForm.js
+│ │ │ └── Results.js
+│ │ ├── services/
+│ │ │ └── api.js
+│ │ ├── utils/
+│ │ │ └── grading.js
+│ │ ├── App.js
+│ │ └── index.js
+│ ├── .env
+│ └── package.json
+│
+└── README.md
+
 ## Task Distribution
 
 ## Phase 4
