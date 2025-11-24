@@ -3,28 +3,13 @@ const router = express.Router();
 const CategoryModel = require("../models/categoryModel");
 const categoryValidation = require("../middlewares/categoryValidation");
 
-// Get all categories + search + sort + pagination
+// Get all categories
+// to get all categories, deleted pagination
 router.get("/", async (req, res) => {
   try {
-    let page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 20;
-    const search = req.query.search || "";
-    const filter = search ? { $text: { $search: search } } : {};
+    const categories = await CategoryModel.find().sort({ name: 1 });
 
-    const categories = await CategoryModel.find(filter)
-      .sort({ name: 1 }) // alphabetical order
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    const total = await CategoryModel.countDocuments(filter);
-
-    res.status(200).json({
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-      categories,
-    });
+    res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
