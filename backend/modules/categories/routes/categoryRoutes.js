@@ -51,6 +51,7 @@ router.post("/", categoryValidation, async (req, res) => {
     const newCategory = req.body;
     const addedCategory = await CategoryModel.create({
       name: newCategory.name,
+      main: newCategory.main
     });
 
     if (!addedCategory) {
@@ -79,7 +80,7 @@ router.put("/:id", categoryValidation, async (req, res) => {
 
     const updatedCategory = await CategoryModel.findByIdAndUpdate(
       categoryId,
-      { $set: { name: newCategory.name } },
+      { $set: { name: newCategory.name, main: newCategory.main } },
       { new: true } // return updated data
     );
 

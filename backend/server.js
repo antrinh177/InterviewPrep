@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("express").json;
+const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./shared/middlewares/connect-db");
 const questionRoutes = require("./modules/questions/routes/questionRoutes");
@@ -17,6 +18,7 @@ const port = process.env.PORT;
 connectDB();
 
 //Global Middlewares
+app.use(cors());
 app.use(bodyParser());
 app.use(logger);
 
