@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { categoryAPI, questionAPI } from "../../services/api";
 
 const QuestionSearchForm = () => {
   // State for all categories fetched from the server
@@ -14,8 +14,8 @@ const QuestionSearchForm = () => {
 
   // fetch categories from backend on component mount
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/categories") // localhost:3000 is used in front-end and crushed
+    categoryAPI
+      .getAll()
       .then((res) => {
         // ensure data is an array
         if (Array.isArray(res.data)) {
@@ -66,15 +66,18 @@ const QuestionSearchForm = () => {
 
     try {
       // fetch search results from backend
-      const res = await axios.get("http://localhost:5000/questions/search", {
-        params: {
-          name: selectedSubs.join(","), // send subcategories as CSV
-          difficulty: selectedDifficulty.join(","), // send difficulty as CSV
-        },
+      const res = await questionAPI.search({
+        category: selectedSubs.join(","), // send subcategories as CSV
+        difficulty: selectedDifficulty.join(","), // send difficulty as CSV
       });
 
-      // navigate to results page with the search results
-      navigate("/result", { state: { results: res.data } });
+      // navigate to results page with the selected filters
+      navigate("/results", { 
+        state: { 
+          selectedSubs: selectedSubs,
+          selectedDifficulty: selectedDifficulty 
+        } 
+      });
     } catch (err) {
       console.error("Search Error:", err);
     }

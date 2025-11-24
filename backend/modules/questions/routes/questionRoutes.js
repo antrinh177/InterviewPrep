@@ -13,10 +13,10 @@ const router = express.Router();
 // GET /questions/search?name=xxx&difficulty=Easy,Medium
 router.get("/search", async (req, res) => {
   try {
-    const { name, difficulty } = req.query;
+    const { categoryname, difficulty } = req.query;
     // build query object
     const query = {};
-    if (name) query.Category = name;
+    if (categoryname) query.Category = categoryname;
 
     let diffArray = [];
     if (difficulty) {

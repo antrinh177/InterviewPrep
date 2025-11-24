@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { questionAPI } from '../services/api';
 import { gradeAnswers } from '../utils/grading';
 
 function Results() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,9 +13,9 @@ function Results() {
   const [gradingResults, setGradingResults] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Category and difficulty
-  const category = 'DevOps';
-  const difficulty = 'Medium';
+  // Get category and difficulty fro form page
+  const selectedCategories = location.state?.selectedSubs || [];
+  const selectedDifficulty = location.state?.selectedDifficulty || [];
 
   useEffect(() => {
     fetchQuestions();
@@ -23,12 +26,12 @@ function Results() {
       setLoading(true);
       
       const params = {
-        category: category,
-        difficulty: difficulty,
+        category: selectedCategories.join(','), // Configure route
+        difficulty: selectedDifficulty.join(','), // Configure route
         limit: 30 // else limit to 10 questions (set in backend model)
       };
 
-      const response = await questionAPI.getAll(params);
+      const response = await questionAPI.search(params);
       setQuestions(response.data.questions);
       setError(null);
     } catch (err) {
@@ -69,8 +72,9 @@ function Results() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-        <div>
-      <h1>Questions Page: ({category} - {difficulty})</h1>
+    <div>
+      <button onClick={() => navigate('/search')}>&larr; Go Back</button>
+      <h1>Questions Page: {selectedCategories.join(', ')} ({selectedDifficulty.join(', ')})</h1>
       
       {questions.length === 0 ? (
         <p>No questions found.</p>

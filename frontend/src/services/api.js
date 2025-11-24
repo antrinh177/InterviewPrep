@@ -1,6 +1,7 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://127.0.0.1:3001'; // Backend URL
+const hostname = process.env.HOSTNAME || "127.0.0.1";
+const port = process.env.PORT || 3001;
+const API_BASE_URL = `http://${hostname}:${port}`; // Backend URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,7 +12,12 @@ const api = axios.create({
 
 // Questions API
 export const questionAPI = {
-  getAll: (params) => api.get('/questions', { params })
+  search: (params) => api.get('/questions/search', { params })
+};
+
+// Categories API
+export const categoryAPI = {
+  getAll: () => api.get('/categories')
 };
 
 export default api;

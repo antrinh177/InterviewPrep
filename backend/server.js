@@ -9,7 +9,6 @@ const categoryRoutes = require("./modules/categories/routes/categoryRoutes");
 const notFound = require("./shared/middlewares/notFound");
 const errorHandler = require("./shared/middlewares/errorHandler");
 const logger = require("./shared/middlewares/logger");
-const cors = require("cors");
 
 const app = express();
 const hostname = process.env.HOSTNAME || "127.0.0.1";
