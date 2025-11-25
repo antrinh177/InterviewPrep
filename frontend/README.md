@@ -58,6 +58,8 @@ InterviewPrep/
 - frontend/src/services/api.js: common code to fetch data from backend
 - frontend/src/utils/grading.js: grading system to grade user's answer on percentage for each question based on match keywords.
 - frontend/src/pages/Results.js: Display questions based on category and difficulty from forms/QuestionSearchForm.js file and show grade for each answered question after user submit
+- frontend/src/utils/localStorage.js: Store completedQuestion object with grade for displaying statistic progress purpose, calculate percentage per main category with formula: Percentage = [(sum of grades) / (total questions * 100)] * 100%
+- frontend/src/pages/Home.js: Display user progress on each main category
 
 ### Ema Maeda
 
