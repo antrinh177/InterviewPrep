@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const CategoryModel = require('../../categories/models/categoryModel');
 //Model functions for questions
 const {readDataFile, writeDataFile} = require("../../../utils/fileHandler");
 const { query } = require('express-validator');
@@ -49,10 +50,32 @@ const getAllQuestions = async(query) => {
     .skip(skip)
     .limit(parseInt(limit));
 
+    // Populate 'main' field from categories
+    const categories = await CategoryModel.find();
+    const categoryMap = {};
+    categories.forEach(cat => {
+        categoryMap[cat.name] = cat.main;
+    });
+
+    // Add 'main' field to each question
+    const questionsWithMain = questions.map(q => {
+        const questionObj = q.toObject();
+        questionObj.main = categoryMap[questionObj.Category] || 'Uncategorized';
+        return questionObj;
+    });
+
+    /////// Sample question after matching ///////
+    // {
+    //   "Question": "What is Docker?",
+    //   "Category": "DevOps",
+    //   "Difficulty": "Medium",
+    //   "main": "System & Infrastructure"
+    // }
+
     const totalQuestions = await Question.countDocuments(filter);
 
     return {
-        questions,
+        questions: questionsWithMain,
         pagination: {
             current_page: parseInt(page),
             max_questions_per_page: parseInt(limit),

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { questionAPI } from '../services/api';
 import { gradeAnswers } from '../utils/grading';
+import { addCompletedQuestion } from '../utils/localStorage';
 
 function Results() {
   const location = useLocation();
@@ -65,6 +66,22 @@ function Results() {
     setGradingResults(results);
     setIsSubmitted(true);
     
+    // Save completed questions to localStorage
+    Object.keys(results.questionResults).forEach(questionId => {
+      const question = questions.find(q => q._id === questionId);
+      const result = results.questionResults[questionId];
+      
+      if (question) {
+        addCompletedQuestion({
+          id: questionId,
+          main: question.main || 'Uncategorized',
+          category: question.Category,
+          difficulty: question.Difficulty,
+          percentage: result.percentage
+        });
+      }
+    });
+    
     console.log('Grading Results:', results);
 };
 
@@ -73,7 +90,10 @@ function Results() {
 
   return (
     <div>
-      <button onClick={() => navigate('/search')}>&larr; Go Back</button>
+      <div>
+        <button onClick={() => navigate('/')}>Home</button>
+        <button onClick={() => navigate('/search')}>Search</button>
+      </div>
       <h1>Questions Page: {selectedCategories.join(', ')} ({selectedDifficulty.join(', ')})</h1>
       
       {questions.length === 0 ? (

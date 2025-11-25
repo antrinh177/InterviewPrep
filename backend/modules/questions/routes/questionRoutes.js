@@ -6,35 +6,49 @@ const {
   updateExistingQuestion,
   deleteQuestion,
 } = require("../models/questionModel");
+const CategoryModel = require("../../categories/models/categoryModel");
 const questionValidation = require("../middlewares/questionValidation");
 
 const router = express.Router();
 
-// GET /questions/search?name=xxx&difficulty=Easy,Medium
+// GET /questions/search?category=xxx&difficulty=Easy,Medium
 router.get("/search", async (req, res) => {
   try {
-    const { categoryname, difficulty } = req.query;
+    const { category, difficulty } = req.query;
+    console.log('Search params:', { category, difficulty });
+    
     // build query object
     const query = {};
-    if (categoryname) query.Category = categoryname;
+    if (category) query.category = category;
 
     let diffArray = [];
     if (difficulty) {
-      diffArray = difficulty.split(",").map((d) => d.trim().toLowerCase());
-      // Prepare query to match lowercase difficulty values in MongoDB
-      query.Difficulty = { $in: diffArray };
+      diffArray = difficulty.split(",").map((d) => d.trim());
+      // Capitalize first letter to match database format (Easy, Medium, Hard)
+      diffArray = diffArray.map(d => d.charAt(0).toUpperCase() + d.slice(1).toLowerCase());
+      query.difficulty = { $in: diffArray };
     }
+    
+    console.log('MongoDB query:', query);
 
     // Fetch all questions matching the query
     const allQuestionsObj = await getAllQuestions(query);
     let questionsArray = allQuestionsObj.questions || [];
+    
+    console.log('Questions found:', questionsArray.length);
 
-    // Final filter in case MongoDB does not store difficulty in lowercase
-    if (diffArray.length > 0) {
-      questionsArray = questionsArray.filter((q) =>
-        diffArray.includes(q.Difficulty.toLowerCase())
-      );
-    }
+    // // Populate 'main' field from categories
+    // const categories = await CategoryModel.find();
+    // const categoryMap = {};
+    // categories.forEach(cat => {
+    //   categoryMap[cat.name] = cat.main;
+    // });
+
+    // // Add 'main' field to each question (in case getAllQuestions didn't add it)
+    // questionsArray = questionsArray.map(q => ({
+    //   ...q,
+    //   main: q.main || categoryMap[q.Category] || 'Uncategorized'
+    // }));
 
     const message =
       questionsArray.length === 0
