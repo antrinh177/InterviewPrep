@@ -14,12 +14,15 @@ const router = express.Router();
 // GET /questions/search?category=xxx&difficulty=Easy,Medium
 router.get("/search", async (req, res) => {
   try {
-    const { category, difficulty } = req.query;
-    console.log('Search params:', { category, difficulty });
+    const { category, difficulty, limit, page } = req.query;
+    console.log('Search params:', { category, difficulty, limit, page });
     
     // build query object
     const query = {};
-    if (category) query.category = category;
+    if (category) {
+      const categoryArray = category.split(",").map((c) => c.trim());
+      query.category = { $in: categoryArray };
+    }
 
     let diffArray = [];
     if (difficulty) {
@@ -29,11 +32,16 @@ router.get("/search", async (req, res) => {
       query.difficulty = { $in: diffArray };
     }
     
+    // Add pagination parameters
+    if (limit) query.limit = parseInt(limit);
+    if (page) query.page = parseInt(page);
+    
     console.log('MongoDB query:', query);
 
     // Fetch all questions matching the query
     const allQuestionsObj = await getAllQuestions(query);
     let questionsArray = allQuestionsObj.questions || [];
+    const pagination = allQuestionsObj.pagination;
     
     console.log('Questions found:', questionsArray.length);
 
@@ -57,6 +65,7 @@ router.get("/search", async (req, res) => {
 
     res.status(200).json({
       questions: questionsArray,
+      pagination,
       message,
     });
   } catch (e) {

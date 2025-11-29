@@ -13,28 +13,37 @@ function Results() {
   const [answers, setAnswers] = useState({});
   const [gradingResults, setGradingResults] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
 
   // Get category and difficulty fro form page
   const selectedCategories = location.state?.selectedSubs || [];
   const selectedDifficulty = location.state?.selectedDifficulty || [];
 
   useEffect(() => {
-    fetchQuestions();
-  }, []);
+    fetchQuestions(page);
+  }, [page]);
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = async (currentPage) => {
     try {
       setLoading(true);
       
       const params = {
         category: selectedCategories.join(','), // Configure route
         difficulty: selectedDifficulty.join(','), // Configure route
-        limit: 30 // else limit to 10 questions (set in backend model)
+        limit: 5, // else limit to 10 questions (set in backend model)
+        page: currentPage
       };
 
       const response = await questionAPI.search(params);
       setQuestions(response.data.questions);
+      setPagination(response.data.pagination);
       setError(null);
+
+      // Reset answers and grading when changing pages
+      setAnswers({});
+      setGradingResults(null);
+      setIsSubmitted(false);
     } catch (err) {
       setError('Failed to load questions');
       console.error(err);
@@ -85,6 +94,38 @@ function Results() {
     console.log('Grading Results:', results);
 };
 
+const handlePreviousPage = () => {
+  if (page > 1) {
+    
+    const hasAnswers = Object.keys(answers).length > 0;
+    // Check if user has answered any questions but hasn't submitted
+    if (hasAnswers && !isSubmitted) {
+      const confirmed = window.confirm(
+        'You have unsubmitted answers. Your answers will be reset if you navigate to another page. Continue?'
+      );
+      if (!confirmed) return;
+    }
+    setPage(page - 1);
+    window.scrollTo(0, 0);
+  }
+};
+
+const handleNextPage = () => {
+  if (pagination && page < pagination.total_pages) {
+    
+    const hasAnswers = Object.keys(answers).length > 0;
+    // Check if user has answered any questions but hasn't submitted
+    if (hasAnswers && !isSubmitted) {
+      const confirmed = window.confirm(
+        'You have unsubmitted answers. Your answers will be reset if you navigate to another page. Continue?'
+      );
+      if (!confirmed) return;
+    }
+    setPage(page + 1);
+    window.scrollTo(0, 0);
+  }
+};
+
   if (loading) return <div>Loading questions...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -95,6 +136,15 @@ function Results() {
         <button onClick={() => navigate('/search')}>Search</button>
       </div>
       <h1>Questions Page: {selectedCategories.join(', ')} ({selectedDifficulty.join(', ')})</h1>
+
+      {pagination && (
+        <div style={{ marginBottom: '20px' }}>
+          <p>Page {pagination.current_page} of {pagination.total_pages} ({pagination.total_questions} total questions)</p>
+          <button onClick={handlePreviousPage} disabled={page === 1}>← Previous</button>
+          <span style={{ margin: '0 10px' }}>Page {page}</span>
+          <button onClick={handleNextPage} disabled={!pagination || page === pagination.total_pages}>Next →</button>
+        </div>
+      )}
       
       {questions.length === 0 ? (
         <p>No questions found.</p>
@@ -133,6 +183,14 @@ function Results() {
             <button type="submit">Submit</button>
           )}
         </form>
+      )}
+
+      {pagination && questions.length > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <button onClick={handlePreviousPage} disabled={page === 1}>← Previous</button>
+          <span style={{ margin: '0 10px' }}>Page {page} of {pagination.total_pages}</span>
+          <button onClick={handleNextPage} disabled={page === pagination.total_pages}>Next →</button>
+        </div>
       )}
     </div>
   );
