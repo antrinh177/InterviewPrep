@@ -1,10 +1,142 @@
 const express = require("express");
 const router = express.Router();
 const UserModel = require("../models/userModel");
+const OTPModel = require("../models/otpModel");
 const userValidation = require("../middlewares/userValidation");
+const registerRules = require("../middlewares/registerRules");
+const loginRules = require("../middlewares/loginRules");
+const updateAccountRules = require("../middlewares/updateAccountRules");
+const verifyLoginRules = require("../middlewares/verifyLoginRules");
+const { matchPassword } = require("../../../utils/password-utils");
+const { encodeToken } = require("../../../utils/jwt-utils");
+const { randomNumberOfNDigits } = require("../../../utils/compute-utils");
+const sendEmail = require("../../../utils/email-utils");
+const authorize = require("../../../shared/middlewares/authorize");
+
+// Login Route
+router.post("/login", loginRules, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Email and password are required" });
+    }
+
+    const foundUser = await UserModel.findOne({ email });
+    if (!foundUser) {
+      return res
+        .status(404)
+        .json({ errorMessage: `User with ${email} doesn't exist` });
+    }
+
+    const passwordMatched = matchPassword(password, foundUser.password);
+    if (!passwordMatched) {
+      return res
+        .status(401)
+        .json({ errorMessage: "Email and password didn't match" });
+    }
+
+    const otp = randomNumberOfNDigits(6).toString().padStart(6, "0");
+
+    await OTPModel.findOneAndUpdate(
+      { email },
+      { email, otp, expiresAt: new Date(Date.now() + 1000 * 60 * 10) },
+      { upsert: true }
+    );
+
+    try {
+      await sendEmail(email, "Your OTP Code", `Your OTP is: ${otp}`);
+    } catch (mailError) {
+      console.error("Failed to send OTP email:", mailError);
+      return res.status(500).json({ errorMessage: "Failed to send OTP email" });
+    }
+
+    const userPayload = {
+      _id: foundUser._id.toString(),
+      email: foundUser.email,
+      name: foundUser.name,
+      role: foundUser.role,
+    };
+
+    res.json({ message: "OTP has been sent to your email", user: userPayload });
+  } catch (error) {
+    console.error("Error in /users/login:", error);
+    res.status(500).json({ errorMessage: "Internal Server Error" });
+  }
+});
+
+// verify login route
+router.post("/verify-login", verifyLoginRules, async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Email and OTP are required" });
+    }
+
+    const savedOTP = await OTPModel.findOne({ email });
+    if (!savedOTP || savedOTP.otp !== otp) {
+      return res.status(401).json({ errorMessage: "OTP verification failed" });
+    }
+
+    const foundUser = await UserModel.findOne({ email });
+    if (!foundUser) {
+      return res.status(404).json({ errorMessage: "User not found" });
+    }
+
+    const userPayload = {
+      _id: foundUser._id.toString(),
+      email: foundUser.email,
+      name: foundUser.name,
+      role: foundUser.role,
+    };
+
+    const token = encodeToken(userPayload);
+
+    await OTPModel.deleteOne({ email });
+
+    res.json({ user: userPayload, token });
+  } catch (error) {
+    console.error("Error in /users/verify-login:", error);
+    res.status(500).json({ errorMessage: "Internal Server Error" });
+  }
+});
+
+// Register route
+router.post("/register", registerRules, async (req, res) => {
+  try {
+    const newUser = req.body;
+
+    // Check if user already exists
+    const existingUser = await UserModel.findOne({ email: newUser.email });
+    if (existingUser) {
+      return res.status(400).json({
+        errorMessage: `User with ${newUser.email} already exists`,
+      });
+    }
+
+    // Create new user
+    const addedUser = await UserModel.create(newUser);
+
+    if (!addedUser) {
+      return res
+        .status(500)
+        .send({ errorMessage: `Oops! User couldn't be added!` });
+    }
+
+    const user = { ...addedUser.toJSON(), password: undefined };
+    res.status(201).json(user);
+  } catch (error) {
+    console.error("Error in /users/register:", error);
+    res.status(500).json({ errorMessage: error.message });
+  }
+});
 
 // Get all users + search + sort + pagination
-router.get("/", async (req, res) => {
+router.get("/", authorize(["admin"]), async (req, res) => {
   try {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 20;
@@ -12,6 +144,7 @@ router.get("/", async (req, res) => {
     const filter = search ? { $text: { $search: search } } : {};
 
     const users = await UserModel.find(filter)
+      .select("-password")
       .sort({ name: 1 }) // alphabetical order
       .skip((page - 1) * limit)
       .limit(limit);
@@ -31,35 +164,34 @@ router.get("/", async (req, res) => {
 });
 
 // Get a single user by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authorize(["admin"]), async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await UserModel.findById(userId);
-    if (!user)
+    const user = await UserModel.findById(userId).select("-password");
+    if (!user) {
       return res
         .status(404)
         .json({ message: `User with ID ${userId} not found` });
+    }
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Create a new user
-router.post("/", userValidation, async (req, res) => {
+// Create a new user (admin only)
+router.post("/", authorize(["admin"]), userValidation, async (req, res) => {
   try {
     const newUser = req.body;
     const addedUser = await UserModel.create({
       name: newUser.name,
       email: newUser.email,
+      password: newUser.password,
       role: newUser.role || "user",
     });
 
-    if (!addedUser) {
-      return res.status(500).send("User couldn't be added!");
-    }
-
-    res.status(201).json(addedUser);
+    const user = { ...addedUser.toJSON(), password: undefined };
+    res.status(201).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -67,41 +199,56 @@ router.post("/", userValidation, async (req, res) => {
 });
 
 // Update a user by ID
-router.put("/:id", userValidation, async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const newUser = req.body;
+router.put(
+  "/:id",
+  authorize(["admin", "user"]),
+  updateAccountRules,
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const requester = req.user; // JWT decoded
 
-    const foundUser = await UserModel.findById(userId);
-    if (!foundUser) {
-      return res.status(404).send(`User with ID ${userId} doesn't exist`);
+      // users can update only themselves
+      if (requester.role === "user" && requester._id.toString() !== userId) {
+        return res.status(403).json({
+          message: "You cannot update other users.",
+        });
+      }
+
+      const newUser = req.body;
+
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            name: newUser.name,
+            email: newUser.email,
+            role: newUser.role,
+          },
+        },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res
+          .status(404)
+          .json({ message: `User with ID ${userId} not found` });
+      }
+
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
     }
-
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
-      {
-        $set: { name: newUser.name, email: newUser.email, role: newUser.role },
-      },
-      { new: true } // return updated data
-    );
-
-    if (!updatedUser) {
-      return res.status(500).send(`User with ID ${userId} couldn't be updated`);
-    }
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
   }
-});
+);
 
 // Delete a user by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize(["admin"]), async (req, res) => {
   try {
     const userId = req.params.id;
 
-    const foundUser = await UserModel.findById(userId);
+    const foundUser = await UserModel.findById(userId).select("-password");
     if (!foundUser) {
       return res.status(404).send(`User with ID ${userId} doesn't exist`);
     }

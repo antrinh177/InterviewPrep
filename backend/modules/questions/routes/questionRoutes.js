@@ -8,6 +8,7 @@ const {
 } = require("../models/questionModel");
 const CategoryModel = require("../../categories/models/categoryModel");
 const questionValidation = require("../middlewares/questionValidation");
+const authorize = require("../../../shared/middlewares/authorize");
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ const router = express.Router();
 router.get("/search", async (req, res) => {
   try {
     const { category, difficulty, limit, page } = req.query;
-    console.log('Search params:', { category, difficulty, limit, page });
-    
+    console.log("Search params:", { category, difficulty, limit, page });
+
     // build query object
     const query = {};
     if (category) {
@@ -28,22 +29,24 @@ router.get("/search", async (req, res) => {
     if (difficulty) {
       diffArray = difficulty.split(",").map((d) => d.trim());
       // Capitalize first letter to match database format (Easy, Medium, Hard)
-      diffArray = diffArray.map(d => d.charAt(0).toUpperCase() + d.slice(1).toLowerCase());
+      diffArray = diffArray.map(
+        (d) => d.charAt(0).toUpperCase() + d.slice(1).toLowerCase()
+      );
       query.difficulty = { $in: diffArray };
     }
-    
+
     // Add pagination parameters
     if (limit) query.limit = parseInt(limit);
     if (page) query.page = parseInt(page);
-    
-    console.log('MongoDB query:', query);
+
+    console.log("MongoDB query:", query);
 
     // Fetch all questions matching the query
     const allQuestionsObj = await getAllQuestions(query);
     let questionsArray = allQuestionsObj.questions || [];
     const pagination = allQuestionsObj.pagination;
-    
-    console.log('Questions found:', questionsArray.length);
+
+    console.log("Questions found:", questionsArray.length);
 
     // // Populate 'main' field from categories
     // const categories = await CategoryModel.find();
