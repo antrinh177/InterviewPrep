@@ -1,5 +1,18 @@
 // LocalStorage utility for tracking completed questions and grades
-const STORAGE_KEY = 'interviewPrep_completedQuestions';
+
+/**
+ * Get user-specific storage key
+ * @returns {string} Storage key with user ID
+ */
+const getUserStorageKey = () => {
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user._id;
+    return `progress_${userId}`;
+  } catch (error) {
+    console.error('Error getting user ID:', error);
+  }
+};
 
 /**
  * Get all completed questions from localStorage
@@ -7,7 +20,8 @@ const STORAGE_KEY = 'interviewPrep_completedQuestions';
  */
 export const getCompletedQuestions = () => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const storageKey = getUserStorageKey();
+    const data = localStorage.getItem(storageKey);
     return data ? JSON.parse(data) : [];
   } catch (error) {
     console.error('Error reading from localStorage:', error);
@@ -40,7 +54,8 @@ export const addCompletedQuestion = (questionData) => {
       });
     }
     
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+    const storageKey = getUserStorageKey();
+    localStorage.setItem(storageKey, JSON.stringify(completed));
     return true;
   } catch (error) {
     console.error('Error saving to localStorage:', error);
@@ -93,11 +108,12 @@ export const getCompletionStats = (allQuestions) => {
 };
 
 /**
- * Clear all completed questions
+ * Clear all completed questions for current user
  */
 export const clearCompletedQuestions = () => {
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    const storageKey = getUserStorageKey();
+    localStorage.removeItem(storageKey);
     return true;
   } catch (error) {
     console.error('Error clearing localStorage:', error);

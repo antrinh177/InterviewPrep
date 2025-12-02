@@ -5,6 +5,7 @@ import { getCompletionStats, clearCompletedQuestions } from '../utils/localStora
 
 function Home() {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,6 +56,16 @@ function Home() {
     <div>
       <h1>Interview Prep Dashboard</h1>
 
+      {user.role === 'admin' && (
+        <button onClick={() => navigate('/admin/dashboard')}>
+          Admin Dashboard
+        </button>
+      )}
+        
+      <button onClick={handleLogout} style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}>
+        Logout
+      </button>
+
       <h2>Progress by Category</h2>
       {mainCategories.length === 0 ? (
         <p>No questions available. Please check your backend connection.</p>
@@ -80,10 +91,6 @@ function Home() {
         
         <button onClick={handleClearProgress}>
           Clear Progress
-        </button>
-        
-        <button onClick={handleLogout} style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}>
-          Logout
         </button>
       </div>
     </div>
