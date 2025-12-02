@@ -132,7 +132,7 @@ const handleNextPage = () => {
   return (
     <div>
       <div>
-        <button onClick={() => navigate('/')}>Home</button>
+        <button onClick={() => navigate('/home')}>Home</button>
         <button onClick={() => navigate('/search')}>Search</button>
       </div>
       <h1>Questions Page: {selectedCategories.join(', ')} ({selectedDifficulty.join(', ')})</h1>

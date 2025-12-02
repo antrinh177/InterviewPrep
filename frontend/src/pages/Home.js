@@ -37,6 +37,15 @@ function Home() {
     }
   };
 
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Redirect to login
+    navigate('/login');
+  };
+
   if (loading) return <div>Loading statistics...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -71,6 +80,10 @@ function Home() {
         
         <button onClick={handleClearProgress}>
           Clear Progress
+        </button>
+        
+        <button onClick={handleLogout} style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}>
+          Logout
         </button>
       </div>
     </div>

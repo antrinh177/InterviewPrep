@@ -5,16 +5,55 @@ import QuestionSearchForm from "./pages/forms/QuestionSearchForm";
 import Results from './pages/Results';
 import Login from './pages/Login';
 import VerifyOTP from './pages/VerifyOTP';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/search" element={<QuestionSearchForm />} />
-        <Route path="/results" element={<Results />} />
+        
+        {/* Protected routes - require login */}
+        <Route 
+          path="/home" 
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/search" 
+          element={
+            <ProtectedRoute>
+              <QuestionSearchForm />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/results" 
+          element={
+            <ProtectedRoute>
+              <Results />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Admin-only route */}
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

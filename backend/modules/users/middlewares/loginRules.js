@@ -5,8 +5,7 @@ const loginRules = [
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
-    .withMessage("Email must be a valid email address")
-    .normalizeEmail(),
+    .withMessage("Email must be a valid email address"),
 
   body("password").notEmpty().withMessage("Password is required"),
 

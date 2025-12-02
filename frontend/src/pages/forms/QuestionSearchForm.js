@@ -85,6 +85,9 @@ const QuestionSearchForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+       <button type="button" onClick={() => navigate('/home')}>
+        Home
+      </button>
       {/* Main Category Checkboxes */}
       <h3>Main Category</h3>
       {uniqueMains.map((main) => (
