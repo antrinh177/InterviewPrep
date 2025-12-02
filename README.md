@@ -1,6 +1,6 @@
 # PHASE 5 #
 
-## An Trinh ##
+## An Trinh - FRONTEND ##
 ### Authentication ###
 - Implemented email/password login page
 - Created OTP verification page
