@@ -1,6 +1,6 @@
 # PHASE 5
 
-## An Trinh
+## An Trinh - Frontend
 
 ### Authentication
 
@@ -21,14 +21,14 @@
 
 - Implemented user-specific progress tracking using localStorage with user IDs
 
-## Ema Maeda
+## Ema Maeda - Backend
 
 ### Authentication
 
 - Implemented login using email/username and password
 - Added OTP authentication
-  - Created backend routes to verify OTP
-  - Generated JWT/access token upon OTP verification
+- Created backend routes to verify OTP
+- Generated JWT/access token upon OTP verification
 
 ### Authorization
 
