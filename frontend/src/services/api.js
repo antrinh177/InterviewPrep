@@ -58,8 +58,9 @@ export const categoryAPI = {
 // Users API (for admin)
 export const userAPI = {
   getAll: () => api.get('/users'),
-  getById: (id) => api.get(`/users/${id}`), //Not used yet
+  getById: (id) => api.get(`/users/${id}`),
   create: (userData) => api.post('/users', userData),
+  update: (id, userData) => api.put(`/users/${id}`, userData),
   delete: (id) => api.delete(`/users/${id}`)
 };
 

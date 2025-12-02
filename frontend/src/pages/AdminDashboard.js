@@ -10,6 +10,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -105,6 +106,60 @@ function AdminDashboard() {
     }
   };
 
+  const handleEditClick = (u) => {
+    setEditingUser(u._id);
+    setFormData({
+      name: u.name,
+      email: u.email,
+      password: '',
+      role: u.role
+    });
+    setShowCreateForm(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUser(null);
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      role: 'user'
+    });
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email) {
+      alert('Name and email are required');
+      return;
+    }
+
+    try {
+      const updateData = {
+        name: formData.name,
+        email: formData.email,
+        role: formData.role
+      };
+
+      await userAPI.update(editingUser, updateData);
+      alert('User updated successfully');
+      
+      setEditingUser(null);
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        role: 'user'
+      });
+      
+      fetchUsers();
+    } catch (err) {
+      alert(err.response?.data?.errorMessage || err.response?.data?.error || 'Failed to update user');
+      console.error('Error updating user:', err);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -123,7 +178,10 @@ function AdminDashboard() {
 
       <hr />
 
-      <button onClick={() => setShowCreateForm(!showCreateForm)}>
+      <button onClick={() => {
+        setShowCreateForm(!showCreateForm);
+        if (editingUser) handleCancelEdit();
+      }}>
         {showCreateForm ? 'Cancel' : 'Create New User'}
       </button>
 
@@ -182,6 +240,50 @@ function AdminDashboard() {
         </div>
       )}
 
+      {editingUser && (
+        <div>
+          <h3>Edit User</h3>
+          <form onSubmit={handleUpdateUser}>
+            <div>
+              <label>Name: </label>
+              <input 
+                type="text" 
+                name="name" 
+                value={formData.name} 
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <label>Email: </label>
+              <input 
+                type="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <label>Role: </label>
+              <select 
+                name="role" 
+                value={formData.role} 
+                onChange={handleInputChange}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            
+            <button type="submit">Update User</button>
+            <button type="button" onClick={handleCancelEdit}>Cancel</button>
+          </form>
+        </div>
+      )}
+
       <hr />
 
        <h2>All Users</h2>
@@ -208,6 +310,9 @@ function AdminDashboard() {
                 <td>{u.email}</td>
                 <td>{u.role}</td>
                 <td>
+                  <button onClick={() => handleEditClick(u)}>
+                    Edit
+                  </button>
                   <button 
                     onClick={() => handleDeleteUser(u._id, u.name)}
                     disabled={u._id === user._id || u._id === user.id}
