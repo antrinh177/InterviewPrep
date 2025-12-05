@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const hostname = process.env.REACT_APP_HOSTNAME || "127.0.0.1";
-const port = process.env.REACT_APP_PORT || 3001;
-const API_BASE_URL = `http://${hostname}:${port}`;
+import api from '../services/api';
 
 function VerifyOTP() {
   const navigate = useNavigate();
@@ -26,7 +22,7 @@ function VerifyOTP() {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/verify-login`, {
+      const response = await api.post('/users/verify-login', {
         email,
         otp
       });
