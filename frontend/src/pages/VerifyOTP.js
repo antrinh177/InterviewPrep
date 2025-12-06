@@ -24,7 +24,7 @@ function VerifyOTP() {
     }
 
     try {
-      const response = await api.post(`/users/verify-login`, {
+      const response = await api.post('/users/verify-login', {
         email,
         otp,
       });

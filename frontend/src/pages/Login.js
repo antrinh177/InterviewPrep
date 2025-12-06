@@ -16,9 +16,9 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await api.post(`/users/login`, {
+      const response = await api.post('/users/login', {
         email,
-        password,
+        password
       });
 
       // Store email temporarily for OTP verification
