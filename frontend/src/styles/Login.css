@@ -1,0 +1,76 @@
+/* Login page container */
+.login-container {
+  width: 400px; /* fixed width */
+  margin: 80px auto; /* center vertically and horizontally */
+  padding: 30px 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Page title */
+.login-title {
+  margin-bottom: 30px;
+  color: #1d4ed8;
+}
+
+/* Error message */
+.login-error {
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+/* Form styles */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Form group */
+.form-group {
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Labels */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+/* Inputs */
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1d4ed8;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-form button:hover:enabled {
+  background-color: #1a3fb0;
+}
+
+.login-form button:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}

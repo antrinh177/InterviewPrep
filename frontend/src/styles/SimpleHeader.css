@@ -1,0 +1,14 @@
+.simple-header {
+  display: flex;
+  justify-content: center; /* Center logo */
+  align-items: center;
+  background-color: #1d4ed8;
+  padding: 15px 0;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.simple-header .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
