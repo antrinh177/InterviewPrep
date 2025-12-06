@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "../styles/Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -21,30 +22,31 @@ function Login() {
       });
 
       // Store email temporarily for OTP verification
-      sessionStorage.setItem('tempEmail', email);
+      sessionStorage.setItem("tempEmail", email);
 
-      alert(response.data.message || 'OTP sent to your email');
+      alert(response.data.message || "OTP sent to your email");
 
       // Redirect to OTP verification page
-      navigate('/verify-otp');
+      navigate("/verify-otp");
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.errorMessage || 'Login failed. Please try again.');
+      console.error("Login error:", err);
+      setError(
+        err.response?.data?.errorMessage || "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Interview Prep - Login</h1>
+    <div className="login-container">
+      <h1 className="login-title">Interview Prep - Login</h1>
 
-      {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
+      {error && <div className="login-error">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label htmlFor="email">Email:</label>
-          <br />
           <input
             type="email"
             id="email"
@@ -53,13 +55,11 @@ function Login() {
             placeholder="Enter your email"
             required
             disabled={loading}
-            style={{ width: '300px', padding: '8px', marginBottom: '15px' }}
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <br />
           <input
             type="password"
             id="password"
@@ -68,12 +68,11 @@ function Login() {
             placeholder="Enter your password"
             required
             disabled={loading}
-            style={{ width: '300px', padding: '8px', marginBottom: '15px' }}
           />
         </div>
 
-        <button type="submit" disabled={loading} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-          {loading ? 'Sending OTP...' : 'Login'}
+        <button type="submit" disabled={loading}>
+          {loading ? "Sending OTP..." : "Login"}
         </button>
       </form>
     </div>

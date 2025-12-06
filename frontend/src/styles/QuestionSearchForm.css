@@ -1,0 +1,67 @@
+/* Container to center the form */
+.search-form-container {
+  width: 500px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+/* Form card */
+.search-form {
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Form title */
+.search-form h2 {
+  margin-bottom: 25px;
+  color: #1d4ed8;
+}
+
+/* Form sections */
+.form-section {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Checkbox labels */
+.checkbox-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Error message */
+.error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* Hint text */
+.hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+/* Search button */
+.search-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1d4ed8;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #1a3fb0;
+}

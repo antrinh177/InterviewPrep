@@ -1,0 +1,50 @@
+/* header */
+.app-header {
+  display: flex;
+  justify-content: space-between; /* left: logo, right: links */
+  align-items: center;
+  background-color: #1d4ed8;
+  padding: 10px 20px;
+  color: white;
+}
+
+/* logo */
+.app-header .logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* links and buttons on the right side of the header */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* space between button and link */
+}
+
+/* nav link */
+.header-right a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+/* active link */
+.header-right a.active {
+  border-bottom: 2px solid #fff;
+}
+
+/* logout button */
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
