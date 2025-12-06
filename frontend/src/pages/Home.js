@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { questionAPI } from "../services/api";
-import {
-  getCompletionStats,
-  clearCompletedQuestions,
-} from "../utils/localStorage";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { questionAPI } from '../services/api';
+import { getCompletionStats, clearCompletedQuestions } from '../utils/localStorage';
 import CircularProgress from "./CircularProgress";
 import "../styles/Home.css";
 
 function Home() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +26,7 @@ function Home() {
       setStats(completionStats);
       setError(null);
     } catch (err) {
-      setError("Failed to load statistics");
+      setError('Failed to load statistics');
       console.error(err);
     } finally {
       setLoading(false);
@@ -37,11 +34,7 @@ function Home() {
   };
 
   const handleClearProgress = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to clear all your progress? This cannot be undone."
-      )
-    ) {
+    if (window.confirm('Are you sure you want to clear all your progress? This cannot be undone.')) {
       clearCompletedQuestions(); // Clear local storage
       fetchStats();
     }
@@ -65,11 +58,11 @@ function Home() {
     <div className="home-container">
       <h1 className="home-title">Interview Prep Dashboard</h1>
 
-      {user.role === "admin" && (
+      {/* {user.role === "admin" && (
         <button onClick={() => navigate("/admin/dashboard")}>
           Admin Dashboard
         </button>
-      )}
+      )} */}
 
       {/* <button
         onClick={handleLogout}
@@ -108,9 +101,13 @@ function Home() {
       )}
 
       <div className="home-actions">
-        <button onClick={() => navigate("/search")}>Start Practicing</button>
+        <button onClick={() => navigate('/search')}>
+          Start Practicing
+        </button>
 
-        <button onClick={handleClearProgress}>Clear Progress</button>
+        <button onClick={handleClearProgress}>
+          Clear Progress
+        </button>
       </div>
     </div>
   );

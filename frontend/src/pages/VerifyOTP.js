@@ -1,51 +1,55 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 import SimpleHeader from "./SimpleHeader";
 import "../styles/VerifyOTP.css";
 
 function VerifyOTP() {
   const navigate = useNavigate();
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
-    const email = sessionStorage.getItem("tempEmail");
+    const email = sessionStorage.getItem('tempEmail');
 
     if (!email) {
-      setError("Session expired. Please login again.");
-      setTimeout(() => navigate("/login"), 2000);
+      setError('Session expired. Please login again.');
+      setTimeout(() => navigate('/login'), 2000);
       return;
     }
 
     try {
       const response = await api.post('/users/verify-login', {
         email,
-        otp,
+        otp
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      sessionStorage.removeItem("tempEmail");
+      // Store JWT token
+      localStorage.setItem('token', response.data.token);
 
-      alert("Login successful!");
+      // Store user info
+      localStorage.setItem('user', JSON.stringify(response.data.user));
 
-      if (response.data.user.role === "admin") {
-        navigate("/admin/dashboard");
+      // Clear temporary email
+      sessionStorage.removeItem('tempEmail');
+
+      // Show success message
+      alert('Login successful!');
+
+      // Redirect based on role
+      if (response.data.user.role === 'admin') {
+        navigate('/admin/dashboard');
       } else {
-        navigate("/home");
+        navigate('/home');
       }
     } catch (err) {
-      console.error("OTP verification error:", err);
-      setError(
-        err.response?.data?.errorMessage ||
-          "OTP verification failed. Please try again."
-      );
+      console.error('OTP verification error:', err);
+      setError(err.response?.data?.errorMessage || 'OTP verification failed. Please try again.');
     } finally {
       setLoading(false);
     }

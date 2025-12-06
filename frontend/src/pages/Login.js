@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 import "../styles/Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
     try {
@@ -22,17 +22,15 @@ function Login() {
       });
 
       // Store email temporarily for OTP verification
-      sessionStorage.setItem("tempEmail", email);
+      sessionStorage.setItem('tempEmail', email);
 
-      alert(response.data.message || "OTP sent to your email");
+      alert(response.data.message || 'OTP sent to your email');
 
       // Redirect to OTP verification page
-      navigate("/verify-otp");
+      navigate('/verify-otp');
     } catch (err) {
-      console.error("Login error:", err);
-      setError(
-        err.response?.data?.errorMessage || "Login failed. Please try again."
-      );
+      console.error('Login error:', err);
+      setError(err.response?.data?.errorMessage || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -72,7 +70,7 @@ function Login() {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Sending OTP..." : "Login"}
+          {loading ? 'Sending OTP...' : 'Login'}
         </button>
       </form>
     </div>
