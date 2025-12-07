@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../services/api';
+import "../styles/AdminDashboard.css";
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,6 +19,7 @@ function AdminDashboard() {
     role: 'user'
   });
 
+  // Fetch all users on mount
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -36,19 +38,15 @@ function AdminDashboard() {
     }
   };
 
-  const handleBackToHome = () => {
-    navigate('/home');
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('user');
+  //   navigate('/login');
+  // };
 
   const handleDeleteUser = async (userId, userName) => {
     const confirmDelete = window.confirm(`Are you sure you want to delete ${userName}?`);
-    
+
     if (!confirmDelete) {
       return;
     }
@@ -73,13 +71,11 @@ function AdminDashboard() {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-
     // Basic validation
     if (!formData.name || !formData.email || !formData.password) {
       alert('Please fill in all required fields');
       return;
     }
-
     if (formData.password.length < 6) {
       alert('Password must be at least 6 characters');
       return;
@@ -88,7 +84,6 @@ function AdminDashboard() {
     try {
       await userAPI.create(formData);
       alert(`User ${formData.name} created successfully`);
-      
       // Reset form
       setFormData({
         name: '',
@@ -97,7 +92,6 @@ function AdminDashboard() {
         role: 'user'
       });
       setShowCreateForm(false);
-      
       // Refresh users list
       fetchUsers();
     } catch (err) {
@@ -129,7 +123,6 @@ function AdminDashboard() {
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
-
     if (!formData.name || !formData.email) {
       alert('Name and email are required');
       return;
@@ -139,20 +132,21 @@ function AdminDashboard() {
       const updateData = {
         name: formData.name,
         email: formData.email,
-        role: formData.role
+        role: formData.role,
       };
 
       await userAPI.update(editingUser, updateData);
-      alert('User updated successfully');
-      
+      alert("User updated successfully");
+
       setEditingUser(null);
       setFormData({
-        name: '',
-        email: '',
-        password: '',
-        role: 'user'
+        name: "",
+        email: "",
+        password: "",
+        role: "user",
       });
-      
+      alert("User updated successfully");
+      handleCancelEdit();
       fetchUsers();
     } catch (err) {
       alert(err.response?.data?.errorMessage || err.response?.data?.error || 'Failed to update user');
@@ -161,16 +155,18 @@ function AdminDashboard() {
   };
 
   return (
-    <div>
-      <div>
+    <div className="dashboard-container">
+      {/* Header */}
+      <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <div>
+        {/* <div>
           <button onClick={handleBackToHome}>Home</button>
           <button onClick={handleLogout}>Logout</button>
-        </div>
+        </div> */}
       </div>
 
-      <div>
+      {/* Admin info */}
+      <div className="dashboard-info">
         <h3>Welcome, {user.name || user.email}!</h3>
         <p>Role: {user.role}</p>
         <p>Email: {user.email}</p>
@@ -178,123 +174,14 @@ function AdminDashboard() {
 
       <hr />
 
-      <button onClick={() => {
-        setShowCreateForm(!showCreateForm);
-        if (editingUser) handleCancelEdit();
-      }}>
-        {showCreateForm ? 'Cancel' : 'Create New User'}
-      </button>
-
-      {showCreateForm && (
-        <div>
-          <h3>Create New User</h3>
-          <form onSubmit={handleCreateUser}>
-            <div>
-              <label>Name: </label>
-              <input 
-                type="text" 
-                name="name" 
-                value={formData.name} 
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <label>Email: </label>
-              <input 
-                type="email" 
-                name="email" 
-                value={formData.email} 
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <label>Password: </label>
-              <input 
-                type="password" 
-                name="password" 
-                value={formData.password} 
-                onChange={handleInputChange}
-                required
-                minLength={6}
-              />
-            </div>
-            
-            <div>
-              <label>Role: </label>
-              <select 
-                name="role" 
-                value={formData.role} 
-                onChange={handleInputChange}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-            
-            <button type="submit">Create User</button>
-          </form>
-        </div>
-      )}
-
-      {editingUser && (
-        <div>
-          <h3>Edit User</h3>
-          <form onSubmit={handleUpdateUser}>
-            <div>
-              <label>Name: </label>
-              <input 
-                type="text" 
-                name="name" 
-                value={formData.name} 
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <label>Email: </label>
-              <input 
-                type="email" 
-                name="email" 
-                value={formData.email} 
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <label>Role: </label>
-              <select 
-                name="role" 
-                value={formData.role} 
-                onChange={handleInputChange}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-            
-            <button type="submit">Update User</button>
-            <button type="button" onClick={handleCancelEdit}>Cancel</button>
-          </form>
-        </div>
-      )}
-
-      <hr />
-
-       <h2>All Users</h2>
+      {/* Users table */}
+      <h2>All Users</h2>
       {loading && <p>Loading users...</p>}
-      
-      {error && <p>Error: {error}</p>}
-
+      {error && <p className="error-text">Error: {error}</p>}
       {!loading && !error && users.length === 0 && <p>No users found.</p>}
 
       {!loading && !error && users.length > 0 && (
-        <table border="1">
+        <table className="users-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -310,10 +197,14 @@ function AdminDashboard() {
                 <td>{u.email}</td>
                 <td>{u.role}</td>
                 <td>
-                  <button onClick={() => handleEditClick(u)}>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEditClick(u)}
+                  >
                     Edit
                   </button>
-                  <button 
+                  <button
+                    className="delete-btn"
                     onClick={() => handleDeleteUser(u._id, u.name)}
                     disabled={u._id === user._id || u._id === user.id}
                   >
@@ -325,6 +216,116 @@ function AdminDashboard() {
           </tbody>
         </table>
       )}
+
+      {/* Changed the place to display the form to Create/Edit form below table */}
+      <div className="form-section">
+        {/* Toggle create form */}
+        {!editingUser && (
+          <button
+            className="toggle-form-btn"
+            onClick={() => setShowCreateForm(!showCreateForm)}
+          >
+            {showCreateForm ? "Cancel" : "Create New User"}
+          </button>
+        )}
+
+        {/* Create user form */}
+        {showCreateForm && (
+          <div className="form-container">
+            <h3>Create New User</h3>
+            <form className="dashboard-form" onSubmit={handleCreateUser}>
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+
+              <label>Password:</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                minLength={6}
+              />
+
+              <label>Role:</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+
+              <button className="create-btn" type="submit">
+                Create User
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Edit user form */}
+        {editingUser && (
+          <div className="form-container">
+            <h3>Edit User</h3>
+            <form className="dashboard-form" onSubmit={handleUpdateUser}>
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+
+              <label>Role:</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+
+              <button className="update-btn" type="submit">
+                Update User
+              </button>
+              <button
+                className="cancel-btn"
+                type="button"
+                onClick={handleCancelEdit}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

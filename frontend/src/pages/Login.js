@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import "../styles/Login.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -36,15 +37,14 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Interview Prep - Login</h1>
+    <div className="login-container">
+      <h1 className="login-title">Interview Prep - Login</h1>
 
-      {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
+      {error && <div className="login-error">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label htmlFor="email">Email:</label>
-          <br />
           <input
             type="email"
             id="email"
@@ -53,13 +53,11 @@ function Login() {
             placeholder="Enter your email"
             required
             disabled={loading}
-            style={{ width: '300px', padding: '8px', marginBottom: '15px' }}
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <br />
           <input
             type="password"
             id="password"
@@ -68,11 +66,10 @@ function Login() {
             placeholder="Enter your password"
             required
             disabled={loading}
-            style={{ width: '300px', padding: '8px', marginBottom: '15px' }}
           />
         </div>
 
-        <button type="submit" disabled={loading} style={{ padding: '10px 20px', cursor: 'pointer' }}>
+        <button type="submit" disabled={loading}>
           {loading ? 'Sending OTP...' : 'Login'}
         </button>
       </form>

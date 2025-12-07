@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import SimpleHeader from "./SimpleHeader";
+import "../styles/VerifyOTP.css";
 
 function VerifyOTP() {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ function VerifyOTP() {
     setLoading(true);
 
     const email = sessionStorage.getItem('tempEmail');
-    
+
     if (!email) {
       setError('Session expired. Please login again.');
       setTimeout(() => navigate('/login'), 2000);
@@ -29,10 +31,10 @@ function VerifyOTP() {
 
       // Store JWT token
       localStorage.setItem('token', response.data.token);
-      
+
       // Store user info
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      
+
       // Clear temporary email
       sessionStorage.removeItem('tempEmail');
 
@@ -54,50 +56,39 @@ function VerifyOTP() {
   };
 
   return (
-    <div>
-      <h1>Verify OTP</h1>
-      <p>Enter the 6-digit code sent to your email</p>
+    <>
+      <SimpleHeader />
+      <div className="otp-container">
+        <div className="otp-card">
+          <h1>Verify OTP</h1>
+          <p>Enter the 6-digit code sent to your email</p>
 
-      {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
+          {error && (
+            <div style={{ color: "red", marginBottom: "20px" }}>{error}</div>
+          )}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="otp">OTP Code:</label>
-          <br />
-          <input
-            type="text"
-            id="otp"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter 6-digit OTP"
-            required
-            maxLength={6}
-            pattern="[0-9]{6}"
-            disabled={loading}
-            style={{ 
-              width: '300px', 
-              padding: '12px', 
-              marginBottom: '15px',
-              fontSize: '18px',
-              letterSpacing: '5px',
-              textAlign: 'center'
-            }}
-          />
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter 6-digit OTP"
+              required
+              maxLength={6}
+              pattern="[0-9]{6}"
+              disabled={loading}
+            />
+            <button type="submit" disabled={loading || otp.length !== 6}>
+              {loading ? "Verifying..." : "Verify OTP"}
+            </button>
+          </form>
+
+          <p style={{ marginTop: "20px" }}>
+            <a href="/login">← Back to Login</a>
+          </p>
         </div>
-
-        <button 
-          type="submit" 
-          disabled={loading || otp.length !== 6} 
-          style={{ padding: '10px 20px', cursor: 'pointer' }}
-        >
-          {loading ? 'Verifying...' : 'Verify OTP'}
-        </button>
-      </form>
-
-      <p style={{ marginTop: '20px' }}>
-        <a href="/login" style={{ color: '#667eea' }}>← Back to Login</a>
-      </p>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { categoryAPI, questionAPI } from "../../services/api";
+import "../../styles/QuestionSearchForm.css";
 
 const QuestionSearchForm = () => {
   // State for all categories fetched from the server
@@ -66,17 +67,16 @@ const QuestionSearchForm = () => {
 
     try {
       // fetch search results from backend
-      const res = await questionAPI.search({
-        category: selectedSubs.join(","), // send subcategories as CSV
-        difficulty: selectedDifficulty.join(","), // send difficulty as CSV
+      await questionAPI.search({
+        category: selectedSubs.join(","),
+        difficulty: selectedDifficulty.join(","),
       });
-
       // navigate to results page with the selected filters
       navigate("/results", { 
         state: { 
           selectedSubs: selectedSubs,
-          selectedDifficulty: selectedDifficulty 
-        } 
+          selectedDifficulty: selectedDifficulty
+        }
       });
     } catch (err) {
       console.error("Search Error:", err);
@@ -84,59 +84,66 @@ const QuestionSearchForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-       <button type="button" onClick={() => navigate('/home')}>
-        Home
-      </button>
-      {/* Main Category Checkboxes */}
-      <h3>Main Category</h3>
-      {uniqueMains.map((main) => (
-        <label key={main} style={{ display: "block" }}>
-          <input
-            type="checkbox"
-            checked={selectedMains.includes(main)}
-            onChange={() => handleMainChange(main)}
-          />
-          {main}
-        </label>
-      ))}
-      {errors.main && <p style={{ color: "red" }}>{errors.main}</p>}
+    <div className="search-form-container">
+      <form className="search-form" onSubmit={handleSubmit}>
+        <h2>Search Questions</h2>
 
-      {/* Sub Category Checkboxes */}
-      <h3>Sub Category</h3>
-      {selectedMains.length === 0 ? (
-        <p>Please select at least one Main Category first</p>
-      ) : (
-        uniqueSubs.map((sub) => (
-          <label key={sub} style={{ display: "block" }}>
-            <input
-              type="checkbox"
-              checked={selectedSubs.includes(sub)}
-              onChange={() => toggle(sub, setSelectedSubs)}
-            />
-            {sub}
-          </label>
-        ))
-      )}
-      {errors.sub && <p style={{ color: "red" }}>{errors.sub}</p>}
+        <div className="form-section">
+          <h3>Main Category</h3>
+          {uniqueMains.map((main) => (
+            <label key={main} className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={selectedMains.includes(main)}
+                onChange={() => handleMainChange(main)}
+              />
+              {main}
+            </label>
+          ))}
+          {errors.main && <p className="error">{errors.main}</p>}
+        </div>
 
-      {/* Difficulty Checkboxes */}
-      <h3>Difficulty</h3>
-      {["Easy", "Medium", "Hard"].map((level) => (
-        <label key={level} style={{ display: "block" }}>
-          <input
-            type="checkbox"
-            checked={selectedDifficulty.includes(level)}
-            onChange={() => toggle(level, setSelectedDifficulty)}
-          />
-          {level}
-        </label>
-      ))}
-      {errors.difficulty && <p style={{ color: "red" }}>{errors.difficulty}</p>}
+        <div className="form-section">
+          <h3>Sub Category</h3>
+          {selectedMains.length === 0 ? (
+            <p className="hint">
+              Please select at least one Main Category first
+            </p>
+          ) : (
+            uniqueSubs.map((sub) => (
+              <label key={sub} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={selectedSubs.includes(sub)}
+                  onChange={() => toggle(sub, setSelectedSubs)}
+                />
+                {sub}
+              </label>
+            ))
+          )}
+          {errors.sub && <p className="error">{errors.sub}</p>}
+        </div>
 
-      {/* Submit button */}
-      <button type="submit">Search</button>
-    </form>
+        <div className="form-section">
+          <h3>Difficulty</h3>
+          {["Easy", "Medium", "Hard"].map((level) => (
+            <label key={level} className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={selectedDifficulty.includes(level)}
+                onChange={() => toggle(level, setSelectedDifficulty)}
+              />
+              {level}
+            </label>
+          ))}
+          {errors.difficulty && <p className="error">{errors.difficulty}</p>}
+        </div>
+
+        <button type="submit" className="search-button">
+          Search
+        </button>
+      </form>
+    </div>
   );
 };
 
