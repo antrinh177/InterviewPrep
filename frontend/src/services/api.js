@@ -33,7 +33,9 @@ api.interceptors.response.use(
   },
   (error) => {
     // Handle 401 Unauthorized (token expired or invalid)
-    if (error.response?.status === 401) {
+    // Only redirect if user was logged in (has token) - this means token expired
+    // Don't redirect on login failures (no token yet)
+    if (error.response?.status === 401 && localStorage.getItem('token')) {
       // Clear authentication data
       localStorage.removeItem('token');
       localStorage.removeItem('user');
