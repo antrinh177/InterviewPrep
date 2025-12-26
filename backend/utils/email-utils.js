@@ -1,63 +1,37 @@
-// SendGrid email service (recommended for production on Render)
-const sgMail = require('@sendgrid/mail');
-
-// Legacy Nodemailer config (commented out - doesn't work on Render free tier due to SMTP port blocking)
-// const nodemailer = require("nodemailer");
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   secure: true,
-//   auth: {
-//     user: process.env.GOOGLE_EMAIL,
-//     pass: process.env.GOOGLE_PASSWORD,
-//   },
-//   tls: {
-//     rejectUnauthorized: false,
-//   },
-// });
-
-// Set SendGrid API key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
+const { google } = require("googleapis");
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+const SENDER_EMAIL = process.env.GOOGLE_SENDER_EMAIL;
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
 async function sendEmail(to, subject, message) {
-  if (!to) throw new Error("Recipient email (to) is required");
-  if (!subject) throw new Error("Email subject is required");
-  if (!message) throw new Error("Email message is required");
-
-  // SendGrid implementation
-  const msg = {
-    to: to,
-    from: process.env.SENDGRID_VERIFIED_EMAIL, // Must be verified in SendGrid
-    subject: subject,
-    text: message,
-  };
-
   try {
-    await sgMail.send(msg);
-    console.log("Email sent successfully via SendGrid to:", to);
+    const rawEmail = [
+      `From: ${SENDER_EMAIL}`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      "Content-Type: text/html; charset=UTF-8",
+      "",
+      `<p>${message}</p>`,
+    ];
+    const composedEmail = rawEmail.join("\n");
+    const encodedEmail = Buffer.from(composedEmail)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+    await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedEmail,
+      },
+    });
+    return true;
   } catch (error) {
-    console.error("Error sending email via SendGrid:", error);
-    if (error.response) {
-      console.error("SendGrid error details:", error.response.body);
-    }
-    throw error;
+    console.log(`Error sending email: `, error);
+    return false;
   }
-
-  // Legacy Nodemailer implementation (commented out)
-  // const mailOptions = {
-  //   from: process.env.GOOGLE_EMAIL,
-  //   to,
-  //   subject,
-  //   text: message,
-  // };
-  //
-  // try {
-  //   const info = await transporter.sendMail(mailOptions);
-  //   console.log("Email sent: " + info.response);
-  //   return info;
-  // } catch (error) {
-  //   console.error("Error sending email:", error);
-  //   throw error;
-  // }
 }
-
 module.exports = sendEmail;
