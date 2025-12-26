@@ -9,6 +9,7 @@ function VerifyOTP() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const receiverEmail = sessionStorage.getItem('tempEmail');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +62,8 @@ function VerifyOTP() {
       <div className="otp-container">
         <div className="otp-card">
           <h1>Verify OTP</h1>
-          <p>Enter the 6-digit code sent to your email</p>
+          <p>Enter the 6-digit code sent to your email:</p>
+          <p style={{ fontWeight: 'bold', marginBottom: '20px' }}>{receiverEmail}</p>
 
           {error && (
             <div style={{ color: "red", marginBottom: "20px" }}>{error}</div>
