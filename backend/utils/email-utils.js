@@ -9,7 +9,7 @@ const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
 async function sendEmail(to, subject, message) {
   try {
     const rawEmail = [
-      `From: ${SENDER_EMAIL}`,
+      `From: InterviewPrep App <${SENDER_EMAIL}>`,
       `To: ${to}`,
       `Subject: ${subject}`,
       "Content-Type: text/html; charset=UTF-8",
