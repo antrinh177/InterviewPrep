@@ -1,68 +1,44 @@
+# InterviewPrep Frontend
+
+## Overview
+The InterviewPrep frontend is a modern, responsive React application for practicing interview questions, tracking user progress, and managing users through an admin dashboard. It features secure authentication with OTP verification, dynamic question search and filtering, and a user-friendly interface designed for both candidates and administrators.
+
+## Features
+- Email/password login with OTP verification
+- Protected routes for authenticated users
+- Admin dashboard: view, create, update, and delete users
+- User registration and account management
+- User progress tracking and local storage persistence
+- Search, filter, and paginate questions by category and difficulty
+- Responsive design with custom CSS modules
+- Seamless integration with backend APIs
+
+## Tech Stack
+- React
+- Axios (API requests)
+- React Router (routing and navigation)
+- CSS Modules (component-scoped styling)
+- LocalStorage (client-side persistence)
+
+## Setup Instructions
+1. Install dependencies:
+	```bash
+	npm install
+	```
+2. Create a `.env` file and set the backend API URL if needed:
+	```env
+	REACT_APP_HOSTNAME=localhost
+	REACT_APP_PORT=3001
+	```
+3. Start the development server:
+	```bash
+	npm start
+	```
+4. The app will run at [http://localhost:3000](http://localhost:3000)
+
 ## Project Structure
-
-InterviewPrep/
-├── backend/
-│ ├── modules/
-│ │ ├── categories/
-│ │ │ ├── middlewares/
-│ │ │ │ └── categoryValidation.js
-│ │ │ ├── models/
-│ │ │ │ └── categoryModel.js
-│ │ │ └── routes/
-│ │ │ └── categoryRoutes.js
-│ │ ├── questions/
-│ │ │ ├── middlewares/
-│ │ │ │ └── questionValidation.js
-│ │ │ ├── models/
-│ │ │ │ └── questionModel.js
-│ │ │ └── routes/
-│ │ │ └── questionRoutes.js
-│ │ └── users/
-│ │ └── ...
-│ ├── shared/
-│ │ └── middlewares/
-│ │ ├── connect-db.js
-│ │ ├── errorHandler.js
-│ │ ├── logger.js
-│ │ └── notFound.js
-│ ├── scripts/
-│ │ └── updateCategoriesWithMainCat.js
-│ ├── .env
-│ ├── server.js
-│ └── package.json
-│
-├── frontend/
-│ ├── public/
-│ ├── src/
-│ │ ├── pages/
-│ │ │ ├── forms/
-│ │ │ │ └── QuestionSearchForm.js
-│ │ │ └── Results.js
-│ │ ├── services/
-│ │ │ └── api.js
-│ │ ├── utils/
-│ │ │ └── grading.js
-│ │ ├── App.js
-│ │ └── index.js
-│ ├── .env
-│ └── package.json
-│
-└── README.md
-
-## Task Distribution
-
-## Phase 4
-
-### An Trinh
-
-- frontend/src/services/api.js: common code to fetch data from backend
-- frontend/src/utils/grading.js: grading system to grade user's answer on percentage for each question based on match keywords.
-- frontend/src/pages/Results.js: Display questions based on category and difficulty from forms/QuestionSearchForm.js file and show grade for each answered question after user submit
-- frontend/src/utils/localStorage.js: Store completedQuestion object with grade for displaying statistic progress purpose, calculate percentage per main category with formula: Percentage = [(sum of grades) / (total questions * 100)] * 100%
-- frontend/src/pages/Home.js: Display user progress on each main category
-
-### Ema Maeda
-
-- backend/modules/categories/routes/categoryRoutes.js: Removed pagination to fetch all categories that meet certain criteria, improving data retrieval for front-end needs
-- backend/modules/questions/routes/questionRoutes.js: Added a /search endpoint to allow filtering questions based on specified requirements.
-- frontend/src/pages/forms/QuestionSearchForm.js: Implemented a search form that enables users to select questions they want to prepare, enhancing the user experience.
+- `src/pages/` - Main pages (Home, Login, SignUp, AdminDashboard, etc.)
+- `src/components/` - Reusable components (ProtectedRoute, etc.)
+- `src/services/` - API service layer
+- `src/styles/` - CSS files
+- `src/utils/` - Utility functions

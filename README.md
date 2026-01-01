@@ -1,39 +1,23 @@
-# PHASE 5
+# InterviewPrep
+InterviewPrep is a full-stack web application for practicing interview questions, tracking user progress, and managing users through an admin dashboard. It features secure authentication with OTP verification, dynamic question search and grading with a responsive user interface for both candidates and administrators.
 
-## An Trinh - Frontend
+## Main Features
+- Email/password login with OTP verification
+- Protected routes and role-based access control (admin/user)
+- Admin dashboard: view, create, update, and delete users
+- User registration and account management
+- Question search, filter, pagination, and grading
+- User progress tracking and local storage persistence
+- Responsive UI with custom styling
 
-### Authentication
+## Tech Stack
+- Frontend: React, Axios, React Router, CSS Modules
+- Backend: Node.js, Express.js, MongoDB (Mongoose), JWT, bcrypt, express-validator, dotenv, cors, Google APIs (for email/OTP)
 
-- Implemented email/password login page
-- Created OTP verification page
-- Built automatic token attachment to all API requests using Axios interceptors
-- Implemented logout with token cleanup
+## Setup
+- See [frontend/README.md](./frontend/README.md) for frontend setup instructions
+- See [backend/README.md](./backend/README.md) for backend setup instructions
 
-### Route Protection
-
-- Built ProtectedRoute component for route-level access control
-
-### Admin Dashboard
-
-- Implement admin functionalities: view all, create, update, delete user
-
-### User Enhancement
-
-- Implemented user-specific progress tracking using localStorage with user IDs
-
-## Ema Maeda - Backend
-
-### Authentication
-
-- Implemented login using email/username and password
-- Added OTP authentication
-- Created backend routes to verify OTP
-- Generated JWT/access token upon OTP verification
-
-### Authorization
-
-- Implemented role-based access control for specific routes
-
-### Styling (in progress)
-
-- Added basic styling for the project
+## Authors
+- An Trinh
+- Ema Maeda
