@@ -1,6 +1,6 @@
 /* Login page container */
 .login-container {
-  width: 400px; /* fixed width */
+  width: 450px; /* fixed width */
   margin: 80px auto; /* center vertically and horizontally */
   padding: 30px 25px;
   background: #ffffff;
