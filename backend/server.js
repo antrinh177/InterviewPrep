@@ -23,10 +23,10 @@ async function startServer() {
     app.use(logger);
     app.use(cors()); // enable CORS
 
-    // API Routes
-    app.use("/questions", questionRoutes);
-    app.use("/users", userRoutes);
-    app.use("/categories", categoryRoutes);
+    // API Routes with DB connection middleware
+    app.use("/questions", connectDB, questionRoutes);
+    app.use("/users", connectDB, userRoutes);
+    app.use("/categories", connectDB, categoryRoutes);
 
     // Error Handler Middleware
     app.use(notFound);
