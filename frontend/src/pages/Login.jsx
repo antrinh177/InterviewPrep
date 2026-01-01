@@ -38,7 +38,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1 className="login-title">Interview Prep - Login</h1>
+      <h1 className="login-title">Login</h1>
 
       {error && <div className="login-error">{error}</div>}
 
