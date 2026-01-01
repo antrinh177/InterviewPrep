@@ -64,7 +64,8 @@ export const userAPI = {
   getById: (id) => api.get(`/users/${id}`),
   create: (userData) => api.post('/users', userData),
   update: (id, userData) => api.put(`/users/${id}`, userData),
-  delete: (id) => api.delete(`/users/${id}`)
+  delete: (id) => api.delete(`/users/${id}`),
+  register: (userData) => api.post('/users/register', userData)
 };
 
 export default api;

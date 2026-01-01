@@ -1,0 +1,83 @@
+.login-link-container {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.login-link {
+  color: #1d4ed8;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+.form-container h1 {
+  text-align: center;
+  color: #1d4ed8;
+  margin-bottom: 24px;
+}
+
+.dashboard-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #222;
+}
+
+.dashboard-form input[type="text"],
+.dashboard-form input[type="email"],
+.dashboard-form input[type="password"] {
+  padding: 10px 8px;
+  margin-bottom: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 15px;
+  background: #f9fafb;
+  transition: border 0.2s;
+}
+
+.dashboard-form input:focus {
+  border: 1.5px solid #1d4ed8;
+  outline: none;
+}
+
+.create-btn-signup {
+  width: 100%;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.create-btn-signup:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+.create-btn-signup:hover:not(:disabled) {
+  background: #153fa1;
+}
+
+.error {
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  text-align: center;
+}

@@ -73,6 +73,15 @@ function Login() {
           {loading ? 'Sending OTP...' : 'Login'}
         </button>
       </form>
+        <div className="signup-link-container">
+          New user?{' '}
+          <span
+            className="signup-link"
+            onClick={() => navigate('/signup')}
+          >
+            Create an account
+          </span>
+        </div>
     </div>
   );
 }

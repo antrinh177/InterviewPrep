@@ -74,3 +74,16 @@
   background-color: #a5b4fc;
   cursor: not-allowed;
 }
+
+.signup-link-container {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.signup-link {
+  color: #1d4ed8;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 500;
+  margin-left: 4px;
+}

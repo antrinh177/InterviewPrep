@@ -248,6 +248,7 @@ function AdminDashboard() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                placeholder="Enter user's name"
               />
 
               <label>Email:</label>
@@ -257,6 +258,7 @@ function AdminDashboard() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
+                placeholder="Enter user's email"
               />
 
 
@@ -268,6 +270,7 @@ function AdminDashboard() {
                 onChange={handleInputChange}
                 required
                 minLength={6}
+                placeholder="Enter password"
               />
 
               <label>Confirm Password:</label>
@@ -278,6 +281,7 @@ function AdminDashboard() {
                 onChange={handleInputChange}
                 required
                 minLength={6}
+                placeholder="Confirm password"
               />
 
               <label>Role:</label>
