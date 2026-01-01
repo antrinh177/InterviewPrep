@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { categoryAPI, questionAPI } from "../../services/api";
-import "../../styles/QuestionSearchForm.css";
+import { categoryAPI, questionAPI } from "../services/api";
+import "../styles/QuestionSearchForm.css";
 
 const QuestionSearchForm = () => {
   // State for all categories fetched from the server

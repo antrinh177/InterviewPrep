@@ -14,24 +14,31 @@ const app = express();
 const hostname = process.env.HOSTNAME || "127.0.0.1";
 const port = process.env.PORT || 3001;
 
-// Connect to MongoDB
-connectDB();
 
-// Global Middlewares
-app.use(bodyParser());
-app.use(logger);
-app.use(cors()); // enable CORS
+async function startServer() {
+  try {
+    await connectDB();
+    // Global Middlewares
+    app.use(bodyParser());
+    app.use(logger);
+    app.use(cors()); // enable CORS
 
-// API Routes
-app.use("/questions", questionRoutes);
-app.use("/users", userRoutes);
-app.use("/categories", categoryRoutes);
+    // API Routes
+    app.use("/questions", questionRoutes);
+    app.use("/users", userRoutes);
+    app.use("/categories", categoryRoutes);
 
-// Error Handler Middleware
-app.use(notFound);
-app.use(errorHandler);
+    // Error Handler Middleware
+    app.use(notFound);
+    app.use(errorHandler);
 
-// Start Server
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+    // Start Server
+    app.listen(port, hostname, () => {
+      console.log(`Server running at http://${hostname}:${port}/`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to MongoDB. Server not started.");
+  }
+}
+
+startServer();
