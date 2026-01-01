@@ -17,7 +17,6 @@ const port = process.env.PORT || 3001;
 
 async function startServer() {
   try {
-    await connectDB();
     // Global Middlewares
     app.use(bodyParser());
     app.use(logger);
