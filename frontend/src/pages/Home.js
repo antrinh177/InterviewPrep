@@ -56,7 +56,7 @@ function Home() {
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Interview Prep Dashboard</h1>
+      <h1 className="home-title">Progress by Category</h1>
 
       {/* {user.role === "admin" && (
         <button onClick={() => navigate("/admin/dashboard")}>
@@ -74,8 +74,6 @@ function Home() {
       >
         Logout
       </button> */}
-
-      <h2 style={{ textAlign: "center" }}>Progress by Category</h2>
 
       {mainCategories.length === 0 ? (
         <p>No questions available. Please check your backend connection.</p>

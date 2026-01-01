@@ -6,6 +6,7 @@ import { addCompletedQuestion } from '../utils/localStorage';
 import "../styles/Results.css";
 
 function Results() {
+  
   const location = useLocation();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
@@ -89,6 +90,12 @@ function Results() {
     console.log('Grading Results:', results);
 };
 
+  const handleRetry = () => {
+      setAnswers({});
+      setGradingResults(null);
+      setIsSubmitted(false);
+    };
+
 const handlePreviousPage = () => {
   if (page > 1) {
 
@@ -130,10 +137,11 @@ const handleNextPage = () => {
         <button onClick={() => navigate('/home')}>Home</button>
         <button onClick={() => navigate('/search')}>Search</button>
       </div> */}
-      <h1>
-        Questions: {selectedCategories.join(", ")} (
-        {selectedDifficulty.join(", ")})
-      </h1>
+      <h2>
+        {selectedCategories.join(", ")}
+        <br />
+        <span>[{selectedDifficulty.join(", ")}]</span>
+      </h2>
 
       {pagination && questions.length > 0 && (
         <div className="pagination">
@@ -154,42 +162,54 @@ const handleNextPage = () => {
         </div>
       )}
 
+
       {questions.length === 0 ? (
         <p>No questions found.</p>
       ) : (
-        <form onSubmit={handleSubmit}>
-          {questions.map((question, index) => {
-            const result = gradingResults?.questionResults[question._id];
-            return (
-              <div key={question._id} className="question-card">
-                <h3>
-                  {(page - 1) * 5 + (index + 1)}. {question.Question}
-                </h3>
-                <input
-                  type="text"
-                  value={answers[question._id] || ''}
-                  onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-                  placeholder="Your answer..."
-                  disabled={isSubmitted}
-                />
-                {result && (
-                  <div className="grading-result">
-                    <p>Score: {result.percentage}%</p>
-                    <details>
-                      <summary>View Correct Answer</summary>
-                      <p>{result.correctAnswer}</p>
-                    </details>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          {!isSubmitted && (
-            <button type="submit" className="submit-button">
-              Submit Answers
-            </button>
+        <>
+          <form onSubmit={handleSubmit}>
+            {questions.map((question, index) => {
+              const result = gradingResults?.questionResults[question._id];
+              return (
+                <div key={question._id} className="question-card">
+                  <h3>
+                    {(page - 1) * 5 + (index + 1)}. {question.Question}
+                  </h3>
+                  <input
+                    type="text"
+                    value={answers[question._id] || ''}
+                    onChange={(e) => handleAnswerChange(question._id, e.target.value)}
+                    placeholder="Your answer..."
+                    disabled={isSubmitted}
+                  />
+                  {result && (
+                    <div className="grading-result">
+                      <p>Score: {result.percentage}%</p>
+                      <details>
+                        <summary>View Correct Answer</summary>
+                        <p>{result.correctAnswer}</p>
+                      </details>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {!isSubmitted && (
+              <button type="submit" className="submit-button">
+                Submit Answers
+              </button>
+            )}
+          </form>
+          {isSubmitted && (
+              <button
+                className="submit-button"
+                style={{ marginTop: '20px' }}
+                onClick={handleRetry}
+              >
+                Retry
+              </button>
           )}
-        </form>
+        </>
       )}
 
       {pagination && questions.length > 0 && (

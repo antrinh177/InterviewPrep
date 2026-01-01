@@ -86,10 +86,10 @@ const QuestionSearchForm = () => {
   return (
     <div className="search-form-container">
       <form className="search-form" onSubmit={handleSubmit}>
-        <h2>Search Questions</h2>
+        <h2>Find Practice Questions</h2>
 
         <div className="form-section">
-          <h3>Main Category</h3>
+          <h4>Main Category</h4>
           {uniqueMains.map((main) => (
             <label key={main} className="checkbox-label">
               <input
@@ -104,7 +104,7 @@ const QuestionSearchForm = () => {
         </div>
 
         <div className="form-section">
-          <h3>Sub Category</h3>
+          <h4>Sub Category</h4>
           {selectedMains.length === 0 ? (
             <p className="hint">
               Please select at least one Main Category first
@@ -125,7 +125,7 @@ const QuestionSearchForm = () => {
         </div>
 
         <div className="form-section">
-          <h3>Difficulty</h3>
+          <h4>Difficulty</h4>
           {["Easy", "Medium", "Hard"].map((level) => (
             <label key={level} className="checkbox-label">
               <input

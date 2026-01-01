@@ -16,6 +16,7 @@ function AdminDashboard() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'user'
   });
 
@@ -72,12 +73,17 @@ function AdminDashboard() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     // Basic validation
-    if (!formData.name || !formData.email || !formData.password) {
+
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       alert('Please fill in all required fields');
       return;
     }
     if (formData.password.length < 6) {
       alert('Password must be at least 6 characters');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
       return;
     }
 
@@ -89,6 +95,7 @@ function AdminDashboard() {
         name: '',
         email: '',
         password: '',
+        confirmPassword: '',
         role: 'user'
       });
       setShowCreateForm(false);
@@ -219,13 +226,13 @@ function AdminDashboard() {
 
       {/* Changed the place to display the form to Create/Edit form below table */}
       <div className="form-section">
-        {/* Toggle create form */}
-        {!editingUser && (
+        {/* Toggle create form - only show when form is closed and not editing */}
+        {!editingUser && !showCreateForm && (
           <button
             className="toggle-form-btn"
-            onClick={() => setShowCreateForm(!showCreateForm)}
+            onClick={() => setShowCreateForm(true)}
           >
-            {showCreateForm ? "Cancel" : "Create New User"}
+            Create New User
           </button>
         )}
 
@@ -252,11 +259,22 @@ function AdminDashboard() {
                 required
               />
 
+
               <label>Password:</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
+                onChange={handleInputChange}
+                required
+                minLength={6}
+              />
+
+              <label>Confirm Password:</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
                 onChange={handleInputChange}
                 required
                 minLength={6}
@@ -272,9 +290,18 @@ function AdminDashboard() {
                 <option value="admin">Admin</option>
               </select>
 
-              <button className="create-btn" type="submit">
-                Create User
-              </button>
+              <div className="form-buttons">
+                <button className="create-btn" type="submit">
+                  Create User
+                </button>
+                <button
+                  className="cancel-btn"
+                  type="button"
+                  onClick={() => setShowCreateForm(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -312,16 +339,18 @@ function AdminDashboard() {
                 <option value="admin">Admin</option>
               </select>
 
-              <button className="update-btn" type="submit">
-                Update User
-              </button>
-              <button
-                className="cancel-btn"
-                type="button"
-                onClick={handleCancelEdit}
-              >
-                Cancel
-              </button>
+              <div className="form-buttons">
+                <button className="update-btn" type="submit">
+                  Update User
+                </button>
+                <button
+                  className="cancel-btn"
+                  type="button"
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}
