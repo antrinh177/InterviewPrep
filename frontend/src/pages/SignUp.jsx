@@ -32,6 +32,7 @@ function SignUp() {
         email: formData.email,
         password: formData.password,
       });
+      window.alert('Signup successfully! Please log in.');
       navigate('/login');
     } catch (err) {
       setError(
